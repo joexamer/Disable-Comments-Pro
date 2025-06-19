@@ -4,7 +4,7 @@ A powerful WordPress plugin to easily disable comments on your website, hide the
 
 ## Description
 
-Disable Comments Pro gives you granular control over comments on your WordPress site. Whether you want to completely remove comments, hide the comments section from the admin menu, or disable comments only for certain post types (like pages, custom post types, etc.), this plugin provides a simple interface to manage it all.
+Disable Comments Pro gives you granular control over comments on your WordPress site. This plugin allows you to completely remove comments, hide the comments menu from the admin dashboard, and selectively disable comments for specific post types (like pages, custom post types, etc.). It provides a simple interface to manage all comment-related settings.
 
 ## Installation
 
@@ -23,9 +23,7 @@ Disable Comments Pro gives you granular control over comments on your WordPress 
     *   Under **Disable Comments For**, select the specific post types where you want comments to be disabled.
 3.  Click `Save Changes` to apply your settings.
 
-## Changelog
-
-### 1.0
+### 1.1
 *   Initial release.
 *   Added functionality to disable comments on frontend and backend.
 *   Added option to hide comments menu.
