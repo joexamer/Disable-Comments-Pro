@@ -3,7 +3,11 @@
  * Plugin Name: Disable Comments Pro
  * Description: A plugin to disable comments, hide the comments tab, and provide settings for specific post types.
  * Version: 1.0
- * Author: Kilo Code
+ * Author: DigaTopia, Yousef Amer
+ * Author URI: https://github.com/joexamer
+ * Plugin URI: https://github.com/joexamer/WFCM-Whatsapp-Checkout
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 // Exit if accessed directly.
@@ -11,9 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Plugin core logic will go here
-
-// Function to check if comments are disabled for a given post type
 function dcp_is_comments_disabled_for_post_type( $post_type ) {
     $options = get_option( 'dcp_settings' );
     if ( isset( $options['enabled'] ) && $options['enabled'] ) {
@@ -24,7 +25,6 @@ function dcp_is_comments_disabled_for_post_type( $post_type ) {
     return false;
 }
 
-// Disable comments on the frontend
 function dcp_disable_frontend_comments( $open, $post_id ) {
     $post_type = get_post_type( $post_id );
     if ( dcp_is_comments_disabled_for_post_type( $post_type ) ) {
@@ -35,7 +35,6 @@ function dcp_disable_frontend_comments( $open, $post_id ) {
 add_filter( 'comments_open', 'dcp_disable_frontend_comments', 10, 2 );
 add_filter( 'pings_open', 'dcp_disable_frontend_comments', 10, 2 );
 
-// Disable comments on the backend
 function dcp_disable_backend_comments() {
     global $pagenow;
 
@@ -43,7 +42,6 @@ function dcp_disable_backend_comments() {
         wp_die( __( 'Comments are disabled site-wide.', 'disable-comments-pro' ), '', array( 'response' => 403 ) );
     }
 
-    // Hide comment-related sections in admin
     add_action( 'admin_menu', 'dcp_remove_comment_menu' );
     add_action( 'add_meta_boxes', 'dcp_remove_comment_meta_boxes' );
     add_action( 'admin_init', 'dcp_remove_comment_support' );
@@ -51,7 +49,6 @@ function dcp_disable_backend_comments() {
 add_action( 'admin_init', 'dcp_disable_backend_comments' );
 
 
-// Remove comments menu item
 function dcp_remove_comment_menu() {
     $options = get_option( 'dcp_settings' );
     if ( isset( $options['enabled'] ) && $options['enabled'] ) {
@@ -59,7 +56,6 @@ function dcp_remove_comment_menu() {
     }
 }
 
-// Remove comments meta boxes from post/page edit screens
 function dcp_remove_comment_meta_boxes() {
     $options = get_option( 'dcp_settings' );
     if ( isset( $options['enabled'] ) && $options['enabled'] ) {
@@ -73,7 +69,6 @@ function dcp_remove_comment_meta_boxes() {
     }
 }
 
-// Remove comments support from post types
 function dcp_remove_comment_support() {
     $options = get_option( 'dcp_settings' );
     if ( isset( $options['enabled'] ) && $options['enabled'] ) {
@@ -86,57 +81,53 @@ function dcp_remove_comment_support() {
         }
     }
 }
-// Add settings page to the admin menu
 function dcp_add_settings_page() {
     add_options_page(
-        'Disable Comments Pro Settings', // Page title
-        'Disable Comments Pro', // Menu title
-        'manage_options', // Capability required
-        'disable-comments-pro', // Menu slug
-        'dcp_settings_page_content' // Callback function to display the page content
+        'Disable Comments Pro Settings',
+        'Disable Comments Pro',
+        'manage_options',
+        'disable-comments-pro',
+        'dcp_settings_page_content' 
     );
 }
 add_action( 'admin_menu', 'dcp_add_settings_page' );
 
-// Register settings
 function dcp_settings_init() {
     register_setting(
-        'dcp_settings_group', // Option group
-        'dcp_settings', // Option name
-        'dcp_sanitize_settings' // Sanitize callback
+        'dcp_settings_group',
+        'dcp_settings',
+        'dcp_sanitize_settings'
     );
 
     add_settings_section(
-        'dcp_settings_section', // ID
-        'Plugin Settings', // Title
-        'dcp_settings_section_callback', // Callback
-        'disable-comments-pro' // Page
+        'dcp_settings_section',
+        'Plugin Settings',
+        'dcp_settings_section_callback',
+        'disable-comments-pro'
     );
 
     add_settings_field(
-        'dcp_enabled', // ID
-        'Enable Plugin', // Title
-        'dcp_enabled_field_callback', // Callback
-        'disable-comments-pro', // Page
-        'dcp_settings_section' // Section
+        'dcp_enabled',
+        'Enable Plugin',
+        'dcp_enabled_field_callback',
+        'disable-comments-pro',
+        'dcp_settings_section'
     );
 
     add_settings_field(
-        'dcp_post_types', // ID
-        'Disable Comments For', // Title
-        'dcp_post_types_field_callback', // Callback
-        'disable-comments-pro', // Page
-        'dcp_settings_section' // Section
+        'dcp_post_types',
+        'Disable Comments For',
+        'dcp_post_types_field_callback',
+        'disable-comments-pro',
+        'dcp_settings_section'
     );
 }
 add_action( 'admin_init', 'dcp_settings_init' );
 
-// Settings section callback
 function dcp_settings_section_callback() {
     echo '&lt;p&gt;Configure the settings for the Disable Comments Pro plugin.&lt;/p&gt;';
 }
 
-// Enabled field callback
 function dcp_enabled_field_callback() {
     $options = get_option( 'dcp_settings' );
     $enabled = isset( $options['enabled'] ) ? (bool) $options['enabled'] : false;
@@ -148,7 +139,6 @@ function dcp_enabled_field_callback() {
     <?php
 }
 
-// Post types field callback
 function dcp_post_types_field_callback() {
     $options = get_option( 'dcp_settings' );
     $selected_post_types = isset( $options['post_types'] ) ? (array) $options['post_types'] : array();
@@ -165,14 +155,11 @@ function dcp_post_types_field_callback() {
     echo '&lt;/ul&gt;';
 }
 
-// Sanitize settings
 function dcp_sanitize_settings( $input ) {
     $output = array();
 
-    // Sanitize enabled field
     $output['enabled'] = isset( $input['enabled'] ) ? (bool) $input['enabled'] : false;
 
-    // Sanitize post types field
     if ( isset( $input['post_types'] ) && is_array( $input['post_types'] ) ) {
         $output['post_types'] = array_map( 'sanitize_text_field', $input['post_types'] );
     } else {
@@ -182,7 +169,6 @@ function dcp_sanitize_settings( $input ) {
     return $output;
 }
 
-// Settings page content
 function dcp_settings_page_content() {
     ?>
     &lt;div class="wrap"&gt;
